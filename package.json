@@ -1,0 +1,23 @@
+{
+  "name": "avrp-gateway",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jilei-hao/avrp-gateway.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jilei-hao/avrp-gateway/issues"
+  },
+  "homepage": "https://github.com/jilei-hao/avrp-gateway#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

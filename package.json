@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "PORT=6060 node app.js",
+    "dev": "PORT=6060 nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

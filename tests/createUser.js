@@ -1,10 +1,12 @@
 const axios = require('axios');
 
-const url = "http://localhost:6060"
+const url = "http://localhost:6060";
+
+const testUserTag = 100 + Math.floor(Math.random() * 899);
 
 const jsonData = {
-  "un": "TestUser235",
-  "pw": "TestUser235Dev"
+  "un": `TestUser${testUserTag}`,
+  "pw": `TestUser${testUserTag}Dev`
 };
 
 const reqConfig = {
@@ -15,7 +17,7 @@ const reqConfig = {
 
 let token = "";
 
-axios.post(`${url}/login`, jsonData, reqConfig)
+axios.post(`${url}/user`, jsonData, reqConfig)
 .then((res) => {
   console.log("Response: ", res.data);
   token = res.data.token;

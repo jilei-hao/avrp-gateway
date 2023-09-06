@@ -9,7 +9,7 @@ const pool = new Pool({
   host: 'localhost',
   database: 'avrp',
   password: 'avrpdev',
-  port: 5432, // Change to your PostgreSQL port if necessary
+  port: 5432,
 });
 
 // Middleware to parse JSON requests
@@ -18,19 +18,22 @@ router.use(express.json());
 // API endpoint to validate a username
 router.post('/', async (req, res) => {
   try {
-    console.log("[userRoutes] start querying database");
     const { un, pw } = req.body;
+    const pwHash = pw; // todo: needs to implement hash logic
 
     // Query the database to check if the username exists
-    const query = 'SELECT fn_CreateUser($1, $2, $3, $4) as userId;';
-    const result = await pool.query(query, [un, pw, 'EndUser', 'Gateway']);
+    console.log("[user::post] start querying database");
+
+    const colName = 'userid';
+    const query = `SELECT fn_CreateUser($1, $2, $3) as ${colName};`;
+    const result = await pool.query(query, [un, pwHash, 'EndUser']);
 
     console.log("-- completed querying database", result.rows);
 
     if (result.rowCount !== 0) {
       res.json({ 
         valid: true, 
-        userId: result.rows[0]['userid'],
+        userId: result.rows[0][colName],
         message: "User created successfully!"
       });
     } else {

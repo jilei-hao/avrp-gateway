@@ -8,8 +8,8 @@ const pool = new Pool({
   port: 5432
 });
 
-const query = 'SELECT fn_GetUserInfo($1);';
-pool.query(query, ['Gateway'])
+const query = 'SELECT fn_CreateUser($1, $2, $3, $4);';
+pool.query(query, ['TestUser2', 'TestUser2Dev', 'EndUser', 'Gateway'])
 .then((result) => {
   console.log(result);
 });

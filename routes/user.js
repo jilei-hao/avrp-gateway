@@ -18,20 +18,20 @@ router.use(express.json());
 // API endpoint to validate a username
 router.post('/', async (req, res) => {
   try {
-    const { un, pw } = req.body;
-    const pwHash = pw; // todo: needs to implement hash logic
+    const { email, password } = req.body;
+    const pwHash = password; // todo: needs to implement hash logic
 
     // Query the database to check if the username exists
     console.log("[user::post] start querying database");
 
     const colName = 'userid';
     const query = `SELECT fn_CreateUser($1, $2, $3) as ${colName};`;
-    const result = await pool.query(query, [un, pwHash, 'EndUser']);
+    const result = await pool.query(query, [email, pwHash, 'EndUser']);
 
     console.log("-- completed querying database", result.rows);
 
     if (result.rowCount !== 0) {
-      res.json({ 
+      res.status(201).json({ 
         valid: true, 
         userId: result.rows[0][colName],
         message: "User created successfully!"

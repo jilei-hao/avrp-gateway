@@ -1,5 +1,9 @@
 const express = require('express');
 const { Pool } = require('pg');
+const bcrypt = require('bcrypt');
+require('dotenv').config({ path: '.env.local' });
+
+const secretKey = process.env.SECRET_KEY;
 
 const router = express.Router();
 
@@ -19,16 +23,15 @@ router.use(express.json());
 router.post('/', async (req, res) => {
   try {
     const { email, password } = req.body;
-    const pwHash = password; // todo: needs to implement hash logic
+    const pwHash = await bcrypt.hash(password, 10);
 
-    // Query the database to check if the username exists
-    console.log("[user::post] start querying database");
+    console.log("sk: ", secretKey);
+    console.log("hash: ", pwHash);
 
+    // Write to database
     const colName = 'userid';
     const query = `SELECT fn_CreateUser($1, $2, $3) as ${colName};`;
     const result = await pool.query(query, [email, pwHash, 'EndUser']);
-
-    console.log("-- completed querying database", result.rows);
 
     if (result.rowCount !== 0) {
       res.status(201).json({ 
@@ -41,7 +44,7 @@ router.post('/', async (req, res) => {
       res.json({
         valid: false,
         userId: -1,
-        message: "Username already exists!"});
+        message: "A user with same email already exists!"});
     }
   } catch (error) {
     console.error('Error querying database:', error);

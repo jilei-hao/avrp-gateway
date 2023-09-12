@@ -1,5 +1,6 @@
 const express = require('express');
 const { Pool } = require('pg');
+const bcrypt = require('bcrypt')
 
 const router = express.Router();
 
@@ -17,13 +18,12 @@ router.use(express.json());
 
 router.post('/', async (req, res) => {
   try {
-    const { un, pw } = req.body;
-    const pwHash = pw; // todo: needs to implement hash logic
+    const { email, password } = req.body;
 
     console.log("[loginRoutes::post] start querying database", req.body);
 
     const query = 'SELECT * FROM fn_GetUserInfo($1)';
-    const result = await pool.query(query, [un]);
+    const result = await pool.query(query, [email]);
 
     console.log("-- completed querying database", result.rows);
 
@@ -34,9 +34,11 @@ router.post('/', async (req, res) => {
       const dbPWHash = row['_passwordhash'];
 
       console.log("[loginRoute::post] dbPWHash: ", dbPWHash);
-      console.log("[loginRoute::post] pwHash: ", pwHash);
-      if (pwHash === dbPWHash) {
-        res.json({ 
+
+      const isPasswordValid = await bcrypt.compare(password, dbPWHash);
+      if (isPasswordValid) {
+        console.log("password is valid!");
+        res.status(200).json({ 
           success: true, 
           userId: row['_userid'],
           roleName: row['_roleName'],
@@ -44,20 +46,25 @@ router.post('/', async (req, res) => {
         });
       }
       else
-        message = "Incorrect password!";
-
+        // failed
+        res.status(401).json({ 
+          success: false, 
+          userId: -1,
+          roleName: '',
+          message: "Invalid credentials!"
+        });
       
     } else {
-      message = "Invalid username!";
+      // failed
+      res.status(401).json({ 
+        success: false, 
+        userId: -1,
+        roleName: '',
+        message: "Invalid credentials!"
+      });
     }
 
-    // failed
-    res.json({ 
-      success: false, 
-      userId: -1,
-      roleName: '',
-      message: message
-    });
+    
 
   } catch (error) {
     console.error('Error processing the request:', error);

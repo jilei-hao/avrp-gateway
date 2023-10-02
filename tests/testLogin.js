@@ -3,8 +3,8 @@ const axios = require('axios');
 const url = "http://localhost:6060"
 
 const jsonData = {
-  "un": "TestUser235",
-  "pw": "TestUser235Dev"
+  "email": "test5@avrp.org",
+  "password": "test5"
 };
 
 const reqConfig = {

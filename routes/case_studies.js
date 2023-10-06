@@ -1,27 +1,15 @@
 const express = require('express');
-const bcrypt = require('bcrypt')
-
 const router = express.Router();
 const DBHelpers = require('../util/db_helpers');
-
-// Create a PostgreSQL database connection pool
-// const pool = new Pool({
-//   user: 'dbusr_gateway',
-//   host: 'localhost',
-//   database: 'avrp',
-//   password: 'avrpdev',
-//   port: 5432,
-// });
+const authenticateToken = require('../util/auth_middleware');
 
 // Middleware to parse JSON requests
 router.use(express.json());
 const db = DBHelpers.getInstance();
 
-router.post('/', async (req, res) => {
+router.post('/', authenticateToken, async (req, res) => {
   try {
-    const { email, password } = req.body;
-
-    console.log("[loginRoutes::post] start querying database", req.body);
+    console.log("[CaseStudiesRoute::post] start querying database", req.body);
 
     const query = 'SELECT * FROM fn_GetUserInfo($1)';
     const result = await db.query(query, [email]);

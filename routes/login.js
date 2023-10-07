@@ -1,17 +1,11 @@
 const express = require('express');
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+require('dotenv').config({ path: '.env.local' });
 
+const secretKey = process.env.SECRET_KEY;
 const router = express.Router();
 const DBHelpers = require('../util/db_helpers');
-
-// Create a PostgreSQL database connection pool
-// const pool = new Pool({
-//   user: 'dbusr_gateway',
-//   host: 'localhost',
-//   database: 'avrp',
-//   password: 'avrpdev',
-//   port: 5432,
-// });
 
 // Middleware to parse JSON requests
 router.use(express.json());
@@ -37,36 +31,31 @@ router.post('/', async (req, res) => {
       console.log("[loginRoute::post] dbPWHash: ", dbPWHash);
 
       const isPasswordValid = await bcrypt.compare(password, dbPWHash);
-      if (isPasswordValid) {
-        console.log("password is valid!");
-        res.status(200).json({ 
-          success: true, 
-          userId: row['_userid'],
-          roleName: row['_roleName'],
-          message: "Successfully logged in!"
-        });
-      }
-      else
+
+      if (!isPasswordValid) {
         // failed
         res.status(401).json({ 
           success: false, 
-          userId: -1,
-          roleName: '',
-          message: "Invalid credentials!"
+          token: '',
+          error: "Invalid credentials!"
         });
-      
+      }
+
+      const userId = row['_userid'];
+
+      res.status(200).json({
+        success: true,
+        token: jwt.sign({ userId: userId }, secretKey, { expiresIn: '1h' }),
+        error: ''
+      });
     } else {
       // failed
       res.status(401).json({ 
         success: false, 
-        userId: -1,
-        roleName: '',
-        message: "Invalid credentials!"
+        token: '',
+        error: "User not found!"
       });
     }
-
-    
-
   } catch (error) {
     console.error('Error processing the request:', error);
     res.status(500).json({ error: 'Internal Server Error' });

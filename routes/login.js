@@ -17,16 +17,12 @@ router.post('/', async (req, res) => {
 
     console.log("[loginRoutes::post] start querying database", req.body);
 
-    const query = 'SELECT * FROM fn_GetUserInfo($1)';
+    const query = 'SELECT * FROM fn_get_user_info($1)';
     const result = await db.query(query, [email]);
-
-    console.log("-- completed querying database", result);
-
-    let message = '';
 
     if (result.rowCount !== 0) {
       const row = result[0];
-      const dbPWHash = row['_passwordhash'];
+      const dbPWHash = row['password_hash'];
 
       console.log("[loginRoute::post] dbPWHash: ", dbPWHash);
 
@@ -41,7 +37,7 @@ router.post('/', async (req, res) => {
         });
       }
 
-      const userId = row['_userid'];
+      const userId = row['user_id'];
 
       res.status(200).json({
         success: true,

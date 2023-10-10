@@ -1,20 +1,10 @@
 const express = require('express');
 const { Pool } = require('pg');
 const bcrypt = require('bcrypt');
-require('dotenv').config({ path: '.env.local' });
-
-const secretKey = process.env.SECRET_KEY;
 
 const router = express.Router();
-
-// Create a PostgreSQL database connection pool
-const pool = new Pool({
-  user: 'dbusr_gateway',
-  host: 'localhost',
-  database: 'avrp',
-  password: 'avrpdev',
-  port: 5432,
-});
+const DBHelpers = require('../util/db_helpers');
+const db = DBHelpers.getInstance();
 
 // Middleware to parse JSON requests
 router.use(express.json());
@@ -25,18 +15,19 @@ router.post('/', async (req, res) => {
     const { email, password } = req.body;
     const pwHash = await bcrypt.hash(password, 10);
 
-    console.log("sk: ", secretKey);
-    console.log("hash: ", pwHash);
+    console.log("[loginRoutes::post] start querying database", email, pwHash);
 
     // Write to database
-    const colName = 'userid';
-    const query = `SELECT fn_CreateUser($1, $2, $3) as ${colName};`;
-    const result = await pool.query(query, [email, pwHash, 'EndUser']);
+    const colName = 'user_id';
+    const query = `SELECT fn_create_user($1, $2, $3) as ${colName};`;
+    const result = await db.query(query, [email, pwHash, 'EndUser']);
+
+    console.log("-- completed querying database", result);
 
     if (result.rowCount !== 0) {
       res.status(201).json({ 
         valid: true, 
-        userId: result.rows[0][colName],
+        userId: result[0][colName],
         message: "User created successfully!"
       });
     } else {

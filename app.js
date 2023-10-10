@@ -4,7 +4,7 @@ const cors = require('cors');
 
 const userRoute = require('./routes/user');
 const loginRoute = require('./routes/login');
-const caseStudiesRoute = require('./routes/case_studies');
+const caseRoute = require('./routes/case');
 
 
 const app = express();
@@ -21,7 +21,7 @@ app.use(cors(corsOptions));
 
 app.use('/user', userRoute);
 app.use('/login', loginRoute);
-app.use('/case_studies', caseStudiesRoute);
+app.use('/case', caseRoute);
 
 // Start the Express server
 const port = process.env.PORT || 3000;

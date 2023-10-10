@@ -35,6 +35,7 @@ router.post('/', async (req, res) => {
           token: '',
           error: "Invalid credentials!"
         });
+        return;
       }
 
       const userId = row['user_id'];

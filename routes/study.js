@@ -17,7 +17,7 @@ router.get('/', authenticateToken, async (req, res) => {
 
     const colName = 'new_case_id';
 
-    // Write to database
+    // Query the database
     const query = `SELECT fn_get_studies_by_case($1, $2) as ${colName};`;
     const result = await db.query(query, [caseId, user.userId]);
 
@@ -41,5 +41,48 @@ router.get('/', authenticateToken, async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+router.post('/', authenticateToken, async (req, res) => {
+  try {
+    const { 
+      caseId, studyName, mainImageId, tpStart, tpEnd, isReady,
+      sysPropaSegId, sysPropaTPRef, sysPropaTPStart, sysPropaTPEnd,
+      diasPropaSegId, diasPropaTPRef, diasPropaTPStart, diasPropaTPEnd
+    } = req.body;
+
+    const { user } = req;
+
+    const colName = 'new_study_id';
+
+    // Query the database
+    const query = 
+      `SELECT fn_create_study($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) as ${colName};`;
+    const result = await db.query(query, [
+      studyName, caseId, mainImageId, tpStart, tpEnd,
+      sysPropaSegId, sysPropaTPRef, sysPropaTPStart, sysPropaTPEnd,
+      diasPropaSegId, diasPropaTPRef, diasPropaTPStart, diasPropaTPEnd,
+      isReady, user.userId
+    ])
+
+    console.log("-- completed querying database", result);
+
+    if (result.rowCount !== 0) {
+      res.status(201).json({
+        valid: true,
+        studyId: result[0][colName],
+        message: "Study created successfully!"
+      })
+    } else {
+      res.status(500).json({
+        valid: false,
+        studyId: -1,
+        message: "No study was created! Database returns no record."
+      })
+    }
+  } catch (error){
+    console.error('Error querying database:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+})
 
 module.exports = router;

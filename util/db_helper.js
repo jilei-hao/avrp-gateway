@@ -1,15 +1,18 @@
+import dotenv from 'dotenv';
 import pkg from 'pg';
 const { Pool } = pkg;
+
+dotenv.config();
 
 class DBHelper {
   constructor() {
     this.pool = new Pool({
       // DBHelper configuration options
-      user: 'dbusr_gateway',
-      host: 'localhost',
-      DBHelper: 'avrp',
-      password: 'avrpdev',
-      port: 5432,
+      user: process.env.DB_USER || 'avrpdev',
+      host: process.env.DB_HOST || 'localhost',
+      port: process.env.DB_PORT || 6061,
+      database: process.env.DB_NAME || 'avrpdb',
+      password: process.env.DB_PASSWORD || 'avrpdev',
     });
   }
 

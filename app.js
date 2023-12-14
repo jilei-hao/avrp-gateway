@@ -1,18 +1,16 @@
-// app.js
-const express = require('express');
-const cors = require('cors');
+import express from 'express';
+import cors from 'cors';
 
-const userRoute = require('./routes/user');
-const loginRoute = require('./routes/login');
-const caseRoute = require('./routes/case');
-const caseStudiesRoute = require('./routes/case_studies')
-
+import userRoute from './routes/user.js';
+import loginRoute from './routes/login.js';
+import caseRoute from './routes/case.js';
+import caseStudiesRoute from './routes/case_studies.js';
 
 const app = express();
 
 // Configure CORS middleware
 const corsOptions = {
-  origin: 'http://localhost:3030', // Replace with your allowed origin(s)
+  origin: 'http://localhost:3030',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true, // enable set cookie with CORS
   optionsSuccessStatus: 204,
@@ -23,7 +21,7 @@ app.use(cors(corsOptions));
 app.use('/user', userRoute);
 app.use('/login', loginRoute);
 app.use('/case', caseRoute);
-app.use('/case_studies', caseStudiesRoute)
+app.use('/case_studies', caseStudiesRoute);
 
 // Start the Express server
 const port = process.env.PORT || 3000;

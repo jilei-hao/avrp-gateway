@@ -1,22 +1,23 @@
-const { Pool } = require('pg');
+import pkg from 'pg';
+const { Pool } = pkg;
 
-class Database {
+class DBHelper {
   constructor() {
     this.pool = new Pool({
-      // Database configuration options
+      // DBHelper configuration options
       user: 'dbusr_gateway',
       host: 'localhost',
-      database: 'avrp',
+      DBHelper: 'avrp',
       password: 'avrpdev',
       port: 5432,
     });
   }
 
   static getInstance() {
-    if (!Database.instance) {
-      Database.instance = new Database();
+    if (!DBHelper.instance) {
+      DBHelper.instance = new DBHelper();
     }
-    return Database.instance;
+    return DBHelper.instance;
   }
 
   async query(sql, params) {
@@ -30,4 +31,4 @@ class Database {
   }
 }
 
-module.exports = Database;
+export default DBHelper;

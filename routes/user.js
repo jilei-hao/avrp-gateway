@@ -1,9 +1,11 @@
-const express = require('express');
-const bcrypt = require('bcrypt');
+
+import express from 'express';
+import bcrypt from 'bcrypt';
+
+import DBHelper from '../util/db_helper.js';
 
 const router = express.Router();
-const DBHelpers = require('../util/db_helpers');
-const db = DBHelpers.getInstance();
+const dbHelper = DBHelper.getInstance();
 
 // Middleware to parse JSON requests
 router.use(express.json());
@@ -19,7 +21,7 @@ router.post('/', async (req, res) => {
     // Write to database
     const colName = 'user_id';
     const query = `SELECT fn_create_user($1, $2, $3) as ${colName};`;
-    const result = await db.query(query, [email, pwHash, 'EndUser']);
+    const result = await dbHelper.query(query, [email, pwHash, 'EndUser']);
 
     console.log("-- completed querying database", result);
 
@@ -42,4 +44,4 @@ router.post('/', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

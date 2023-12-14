@@ -1,8 +1,10 @@
-const express = require('express');
+
+import express from 'express';
+import DBHelpers from '../util/db_helper.js';
+import authenticateToken from '../util/auth_middleware.js';
+
 const router = express.Router();
-const DBHelpers = require('../util/db_helpers');
 const db = DBHelpers.getInstance();
-const authenticateToken = require('../util/auth_middleware');
 
 // Middleware to parse JSON requests
 router.use(express.json());
@@ -85,4 +87,4 @@ router.post('/', authenticateToken, async (req, res) => {
   }
 })
 
-module.exports = router;
+export default router;

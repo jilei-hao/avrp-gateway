@@ -1,11 +1,14 @@
-const express = require('express');
-const router = express.Router();
-const DBHelpers = require('../util/db_helpers');
-const db = DBHelpers.getInstance();
-const authenticateToken = require('../util/auth_middleware');
+
+import express from 'express';
+import { Router } from 'express';
+import DBHelper from '../util/db_helper.js';
+import authenticateToken from '../util/auth_middleware.js';
 
 // Middleware to parse JSON requests
+const router = Router();
 router.use(express.json());
+
+const dbHelper = DBHelper.getInstance();
 
 router.get('/', authenticateToken, async (req, res) => {
   try {
@@ -15,7 +18,7 @@ router.get('/', authenticateToken, async (req, res) => {
 
     // query the database
     const query = `SELECT * FROM fn_get_case_study_headers($1);`;
-    const rows = await db.query(query, [user.userId]);
+    const rows = await dbHelper.query(query, [user.userId]);
 
     const case_study_headers = {};
 
@@ -48,4 +51,4 @@ router.get('/', authenticateToken, async (req, res) => {
   }
 })
 
-module.exports = router;
+export default router;

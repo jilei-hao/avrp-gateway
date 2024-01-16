@@ -38,23 +38,23 @@ create table study_status_lut (
 );
 
 create table image_header (
-  image_id serial primary key,
-  file_server_path varchar,
+  image_header_id bigint primary key,
+  data_server_id bigint,
+  data_server_folder varchar(255),
+  file_name varchar(255),
   image_role_id int references image_role_lut(image_role_id),
   image_modality_id int references image_modality_lut(image_modality_id),
-  uploaded_by_id int references users(user_id),
-  uploaded_datetime timestamp
+  uploaded_at timestamp,
+  last_modified_at timestamp
 );
 
 create table study (
   study_id serial primary key,
   case_id int references surgery_case(case_id),
-  main_image_id int references image_header(image_id),
-  days_since_last_study int,
   study_name varchar(50),
-  time_point_start int,
-  time_point_end int,
-  study_status_id int references study_status_lut(study_status_id)
+  days_since_last_study int,
+  created_at timestamp,
+  last_modified_at timestamp
 );
 
 create table propagation_type_lut (
@@ -62,14 +62,24 @@ create table propagation_type_lut (
   propagation_type_name varchar(50)
 );
 
+create table study_config (
+  study_config_id serial primary key,
+  study_id int references study(study_id),
+  main_image_id bigint references image_header(image_header_id),
+  create_at timestamp,
+  last_modified_at timestamp
+);
+
 create table propagation_config (
   propagation_config_id serial primary key,
-  study_id int references study(study_id),
+  study_config_id int references study_config(study_config_id),
   propagation_type_id int references propagation_type_lut(propagation_type_id),
-  reference_segmentation_id int references image_header(image_id),
+  reference_segmentation_id int references image_header(image_header_id),
   time_point_reference int,
   time_point_start int,
-  time_point_end int
+  time_point_end int,
+  created_at timestamp,
+  last_modified_at timestamp
 );
 
 create table app_data_role_lut (

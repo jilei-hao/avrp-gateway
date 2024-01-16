@@ -23,6 +23,7 @@ router.get('/', authenticateToken, async (req, res) => {
     const case_study_headers = {};
 
     rows.forEach(row => {
+      console.log("[caseStudiesRoute::get] row: ", row);
       const {case_id, case_name, mrn, study_id, study_name} = row;
 
       if (!case_study_headers[case_id]) {
@@ -30,19 +31,19 @@ router.get('/', authenticateToken, async (req, res) => {
           id: case_id,
           name: case_name,
           mrn: mrn,
-          study_count: 0,
           studies: []
         }
+      }
 
-        if (study_id) {
-          case_study_headers[case_id].studies.push({
-            id: study_id,
-            name: study_name
-          });
-          case_study_headers[case_id].study_count++;
-        }
+      if (study_id) {
+        case_study_headers[case_id].studies.push({
+          id: study_id,
+          name: study_name
+        });
       }
     });
+
+    console.log("[caseStudiesRoute::get] case_study_headers: ", case_study_headers);
 
     res.status(200).json(case_study_headers);
   } catch(error) {

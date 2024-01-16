@@ -4,7 +4,9 @@ import cors from 'cors';
 import userRoute from './routes/user.js';
 import loginRoute from './routes/login.js';
 import caseRoute from './routes/case.js';
-import caseStudiesRoute from './routes/case_studies.js';
+import caseStudiesRoute from './routes/case-studies.js';
+import studyRoute from './routes/study.js';
+import studyConfigRoute from './routes/study-config.js';
 
 const app = express();
 
@@ -22,6 +24,8 @@ app.use('/user', userRoute);
 app.use('/login', loginRoute);
 app.use('/case', caseRoute);
 app.use('/case_studies', caseStudiesRoute);
+app.use('/study', studyRoute);
+app.use('/study_config', studyConfigRoute);
 
 // Start the Express server
 const port = process.env.PORT || 3000;

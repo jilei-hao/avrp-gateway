@@ -63,23 +63,40 @@ router.post('/', authenticateToken, uploadFileds, async (req, res) => {
       tp_ref_sys, tp_start_sys, tp_end_sys, 
       tp_ref_dias, tp_start_dias, tp_end_dias
     } = req.body;
-
-    console.log("[studyConfigRoute::post] body: ", req.body);
-    console.log("[studyConfigRoute::post] files: ", req.files);
-    console.log("[studyConfigRoute::post] study_id: ", study_id);
+    const modality = 'CT'; // todo: get this from the request body
 
     // send files to the data server
     const dsId_image_4d = 
       await ds_PostData(req.files.image_4d[0].path, `${study_id}`, 'image_4d.nii.gz');
-    // const dsId_reference_seg_sys = 
-    //   await ds_PostData(req.files.reference_seg_sys[0], `${study_id}`, 'reference_seg_sys.nii.gz');
-    // const dsId_reference_seg_dias =
-    //   await ds_PostData(req.files.reference_seg_dias[0], `${study_id}`, 'reference_seg_dias.nii.gz');
+
+    console.log("[studyConfigRoute::post] dsId_image_4d: ", dsId_image_4d);
+    
+    const dsId_reference_seg_sys = 
+      await ds_PostData(req.files.reference_seg_sys[0].path, `${study_id}`, 'reference_seg_sys.nii.gz');
+    
+    console.log("[studyConfigRoute::post] dsId_reference_seg_sys: ", dsId_reference_seg_sys);
+
+    const dsId_reference_seg_dias =
+      await ds_PostData(req.files.reference_seg_dias[0].path, `${study_id}`, 'reference_seg_dias.nii.gz');
+
+    console.log("[studyConfigRoute::post] dsId_reference_seg_dias: ", dsId_reference_seg_dias);
+    
+    
     
     // insert config to the database
+    const colName = 'study_config_id';
+    const query = `SELECT fn_create_study_config($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) as ${colName};`;
+
+    const rows = await db.query(query, [
+      study_id, dsId_image_4d, modality, tp_start, tp_end,
+      dsId_reference_seg_sys, tp_ref_sys, tp_start_sys, tp_end_sys,
+      dsId_reference_seg_dias, tp_ref_dias, tp_start_dias, tp_end_dias
+    ]);
+
+    console.log("[studyConfigRoute::post] rows: ", rows);
 
     // respond with success
-
+    res.status(201).json({studyConfigId: rows[0][colName], message: "Study Config created successfully!"});
   } catch (error){
     console.error('Error querying database:', error);
     res.status(500).json({ error: 'Internal Server Error' });

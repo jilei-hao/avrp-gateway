@@ -38,10 +38,8 @@ create table study_status_lut (
 );
 
 create table image_header (
-  image_header_id bigint primary key,
+  image_header_id bigserial primary key,
   data_server_id bigint,
-  data_server_folder varchar(255),
-  file_name varchar(255),
   image_role_id int references image_role_lut(image_role_id),
   image_modality_id int references image_modality_lut(image_modality_id),
   uploaded_at timestamp,
@@ -66,7 +64,7 @@ create table study_config (
   study_config_id serial primary key,
   study_id int references study(study_id),
   main_image_id bigint references image_header(image_header_id),
-  create_at timestamp,
+  created_at timestamp,
   last_modified_at timestamp
 );
 

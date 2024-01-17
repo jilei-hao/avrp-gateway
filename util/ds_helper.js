@@ -23,6 +23,9 @@ export async function ds_PostData(_cachedFilePath, _path, _filename) {
     }
     return response.json();
   })
+  .then(data => {
+    return data.fileId;
+  })
   .catch(error => {
     console.error(error);
   });

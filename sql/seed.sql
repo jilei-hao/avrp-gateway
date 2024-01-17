@@ -36,7 +36,7 @@ values
 
 
 insert into image_modality_lut (image_modality_name)
-values ('CTA'), ('Echo');
+values ('CT'), ('US'), ('Unknown');
 
 insert into image_role_lut (image_role_name)
 values ('Main'), ('Segmentation');

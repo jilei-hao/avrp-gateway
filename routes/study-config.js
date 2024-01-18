@@ -4,7 +4,7 @@ import DBHelpers from '../util/db_helper.js';
 import authenticateToken from '../util/auth_middleware.js';
 import multer from 'multer';
 import dotenv from 'dotenv';
-import { ds_PostData } from '../util/ds_helper.js';
+import { ds_CheckFileExists, ds_PostFile, ds_GetFile } from '../util/ds_helper.js';
 import fs from 'fs';
 
 const router = express.Router();
@@ -66,22 +66,23 @@ router.post('/', authenticateToken, uploadFileds, async (req, res) => {
     const modality = 'CT'; // todo: get this from the request body
 
     // send files to the data server
-    const dsId_image_4d = 
-      await ds_PostData(req.files.image_4d[0].path, `${study_id}`, 'image_4d.nii.gz');
+    const image4d_fileId = await ds_CheckFileExists(`${study_id}`, 'image_4d.nii.gz');
+    const dsId_image_4d = image4d_fileId !== 0 ? image4d_fileId :
+      await ds_PostFile(req.files.image_4d[0].path, `${study_id}`, 'image_4d.nii.gz');
 
     console.log("[studyConfigRoute::post] dsId_image_4d: ", dsId_image_4d);
     
-    const dsId_reference_seg_sys = 
-      await ds_PostData(req.files.reference_seg_sys[0].path, `${study_id}`, 'reference_seg_sys.nii.gz');
+    const refsegsys_fileId = await ds_CheckFileExists(`${study_id}`, 'reference_seg_sys.nii.gz');
+    const dsId_reference_seg_sys = refsegsys_fileId !== 0 ? refsegsys_fileId :
+      await ds_PostFile(req.files.reference_seg_sys[0].path, `${study_id}`, 'reference_seg_sys.nii.gz');
     
     console.log("[studyConfigRoute::post] dsId_reference_seg_sys: ", dsId_reference_seg_sys);
 
-    const dsId_reference_seg_dias =
-      await ds_PostData(req.files.reference_seg_dias[0].path, `${study_id}`, 'reference_seg_dias.nii.gz');
+    const refsegdias_fileId = await ds_CheckFileExists(`${study_id}`, 'reference_seg_dias.nii.gz');
+    const dsId_reference_seg_dias = refsegdias_fileId !== 0 ? refsegdias_fileId : 
+      await ds_PostFile(req.files.reference_seg_dias[0].path, `${study_id}`, 'reference_seg_dias.nii.gz');
 
     console.log("[studyConfigRoute::post] dsId_reference_seg_dias: ", dsId_reference_seg_dias);
-    
-    
     
     // insert config to the database
     const colName = 'study_config_id';

@@ -1,10 +1,13 @@
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
+
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const secreteKey = process.env.SECRET_KEY;
 
 function authenticateToken(req, res, next) {
-  const authHeader = req.headers.authentication;
+  const authHeader = req.headers.authorization;
   const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
@@ -23,4 +26,4 @@ function authenticateToken(req, res, next) {
   });
 }
 
-module.exports = authenticateToken;
+export default authenticateToken;

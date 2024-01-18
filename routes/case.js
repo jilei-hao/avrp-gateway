@@ -1,8 +1,9 @@
-const express = require('express');
+import express from 'express';
+import DBHelper from '../util/db_helper.js';
+import authenticateToken from '../util/auth_middleware.js';
+
 const router = express.Router();
-const DBHelpers = require('../util/db_helpers');
-const db = DBHelpers.getInstance();
-const authenticateToken = require('../util/auth_middleware');
+const dbHelper = DBHelper.getInstance();
 
 // Middleware to parse JSON requests
 router.use(express.json());
@@ -19,7 +20,7 @@ router.post('/', authenticateToken, async (req, res) => {
 
     // Write to database
     const query = `SELECT fn_create_case($1, $2) as ${colName};`;
-    const result = await db.query(query, [caseName, user.userId]);
+    const result = await dbHelper.query(query, [caseName, user.userId]);
 
     console.log("-- completed querying database", result);
 
@@ -42,4 +43,4 @@ router.post('/', authenticateToken, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

@@ -1,15 +1,16 @@
-const express = require('express');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-require('dotenv').config({ path: '.env.local' });
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+import express from 'express';
+import DBHelpers from '../util/db_helper.js';
+
+dotenv.config({ path: '.env.local' });
 
 const secretKey = process.env.SECRET_KEY;
 const router = express.Router();
-const DBHelpers = require('../util/db_helpers');
-
-// Middleware to parse JSON requests
-router.use(express.json());
 const db = DBHelpers.getInstance();
+
+router.use(express.json());
 
 router.post('/', async (req, res) => {
   try {
@@ -29,7 +30,6 @@ router.post('/', async (req, res) => {
       const isPasswordValid = await bcrypt.compare(password, dbPWHash);
 
       if (!isPasswordValid) {
-        // failed
         res.status(401).json({ 
           success: false, 
           token: '',
@@ -46,7 +46,6 @@ router.post('/', async (req, res) => {
         error: ''
       });
     } else {
-      // failed
       res.status(401).json({ 
         success: false, 
         token: '',
@@ -59,4 +58,4 @@ router.post('/', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

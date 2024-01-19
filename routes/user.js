@@ -2,7 +2,7 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 
-import DBHelper from '../util/db_helper.js';
+import { DBHelper } from '../util/db-helper.js';
 
 const router = express.Router();
 const dbHelper = DBHelper.getInstance();

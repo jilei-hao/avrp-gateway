@@ -1,10 +1,10 @@
 
 import express from 'express';
-import DBHelpers from '../util/db_helper.js';
+import { DBHelper } from '../util/db-helper.js';
 import authenticateToken from '../util/auth_middleware.js';
 
 const router = express.Router();
-const db = DBHelpers.getInstance();
+const db = DBHelper.getInstance();
 
 // Middleware to parse JSON requests
 router.use(express.json());

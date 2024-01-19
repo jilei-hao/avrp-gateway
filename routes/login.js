@@ -2,13 +2,13 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import express from 'express';
-import DBHelpers from '../util/db_helper.js';
+import { DBHelper } from '../util/db-helper.js';
 
 dotenv.config({ path: '.env.local' });
 
 const secretKey = process.env.SECRET_KEY;
 const router = express.Router();
-const db = DBHelpers.getInstance();
+const db = DBHelper.getInstance();
 
 router.use(express.json());
 

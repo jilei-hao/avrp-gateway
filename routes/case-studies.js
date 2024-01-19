@@ -1,7 +1,7 @@
 
 import express from 'express';
 import { Router } from 'express';
-import DBHelper from '../util/db_helper.js';
+import { DBHelper } from '../util/db-helper.js';
 import authenticateToken from '../util/auth_middleware.js';
 
 // Middleware to parse JSON requests

@@ -6,7 +6,7 @@ import fs from 'fs';
 
 dotenv.config();
 
-export async function ds_CheckFileExists(_folder, _filename) {
+export async function ds_GetFileId(_folder, _filename) {
   return fetch(`${process.env.DATA_SERVER_URL}/data?folder=${_folder}&filename=${_filename}`, {
       method: 'HEAD'
     })

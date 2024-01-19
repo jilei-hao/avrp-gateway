@@ -1,5 +1,5 @@
 import express from 'express';
-import DBHelper from '../util/db_helper.js';
+import { DBHelper } from '../util/db-helper.js';
 import authenticateToken from '../util/auth_middleware.js';
 
 const router = express.Router();

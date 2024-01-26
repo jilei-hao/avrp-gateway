@@ -5,7 +5,7 @@ create table user_role (
 
 create table users (
   user_id serial primary key,
-  email varchar(50) unique,
+  username varchar(50) unique,
   password_hash varchar,
   user_role_id int references user_role(user_role_id)
 );
@@ -46,11 +46,13 @@ create table image_header (
   last_modified_at timestamp
 );
 
+
 create table study (
   study_id serial primary key,
   case_id int references surgery_case(case_id),
   study_name varchar(50),
-  days_since_last_study int,
+  study_status_id int references study_status_lut(study_status_id),
+  module_status bigint, -- bitmask of module status
   created_at timestamp,
   last_modified_at timestamp
 );
@@ -80,15 +82,35 @@ create table propagation_config (
   last_modified_at timestamp
 );
 
-create table app_data_role_lut (
-  app_data_role_id serial primary key,
-  app_data_role_name varchar(50)
+create table render_type (
+  render_type_id serial primary key,
+  render_type_name varchar(50)
 );
 
-create table app_data_header (
-  app_data_id serial primary key,
+create table module_data_type (
+  module_data_type_id serial primary key,
+  module_data_type_name varchar(50),
+  render_type_id int references render_type(render_type_id)
+);
+
+create table module (
+  module_id serial primary key,
+  module_name varchar(50), -- lower-kebab-case
+  module_display_name varchar(50), -- Camel Case with space
+  module_description varchar
+);
+
+create table module_output_group (
+  module_output_group_id serial primary key,
+  module_id int references module(module_id),
+  module_output_group_name varchar(50),
+  module_data_type_id int references module_data_type(module_data_type_id)
+);
+
+-- module data header stores output of modules
+create table module_data_header (
   study_id int references study(study_id),
-  app_data_role_id int references app_data_role_lut(app_data_role_id),
-  created_datetime timestamp,
-  last_modified_datetime timestamp
+  module_output_group_id int references module_output_group(module_output_group_id),
+  number_of_files int,
+  data_server_ids bigint[]
 );

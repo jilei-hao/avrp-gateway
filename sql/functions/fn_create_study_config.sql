@@ -37,6 +37,18 @@ begin
     raise exception 'Invalid study_id: %', p_study_id;
   end if;
 
+  if p_main_image_dsid is null then
+    raise exception 'main_image_dsid cannot be null';
+  end if;
+
+  if p_sys_refseg_dsid is null then
+    raise exception 'sys_refseg_dsid cannot be null';
+  end if;
+
+  if p_dias_refseg_dsid is null then
+    raise exception 'dias_refseg_dsid cannot be null';
+  end if;
+
   --==============================
   -- Creation
   --==============================
@@ -56,6 +68,8 @@ begin
     insert into image_header(data_server_id, image_role_id, image_modality_id, uploaded_at, last_modified_at)
     values(p_main_image_dsid, v_role_main_id, v_modality_id, now(), now())
     returning image_header_id into v_main_header_id;
+  else
+    raise exception 'Image header already exists for main image with dsid: %', p_main_image_dsid;
   end if;
 
   ---- systolic segmentation
@@ -63,6 +77,8 @@ begin
     insert into image_header(data_server_id, image_role_id, image_modality_id, uploaded_at, last_modified_at)
     values(p_sys_refseg_dsid, v_role_seg_id, v_modality_id, now(), now())
     returning image_header_id into v_sys_refseg_header_id;
+  else
+    raise exception 'Image header already exists for systolic segmentation with dsid: %', p_sys_refseg_dsid;
   end if;
 
   ---- diastolic segmentation
@@ -70,11 +86,13 @@ begin
     insert into image_header(data_server_id, image_role_id, image_modality_id, uploaded_at, last_modified_at)
     values(p_dias_refseg_dsid, v_role_seg_id, v_modality_id, now(), now())
     returning image_header_id into v_dias_refseg_header_id;
+  else
+    raise exception 'Image header already exists for diastolic segmentation with dsid: %', p_dias_refseg_dsid;
   end if;
 
   -- insert new study config
-  insert into study_config(study_id, main_image_id, created_at, last_modified_at)
-  values(p_study_id, v_main_header_id, now(), now())
+  insert into study_config(study_id, main_image_id, time_point_start, time_point_end, created_at, last_modified_at)
+  values(p_study_id, v_main_header_id, p_tp_start, p_tp_end, now(), now())
   returning study_config_id into v_study_config_id;
 
   -- insert new propagation configs

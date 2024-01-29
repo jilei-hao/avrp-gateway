@@ -66,6 +66,8 @@ create table study_config (
   study_config_id serial primary key,
   study_id int references study(study_id),
   main_image_id bigint references image_header(image_header_id),
+  time_point_start int,
+  time_point_end int,
   created_at timestamp,
   last_modified_at timestamp
 );

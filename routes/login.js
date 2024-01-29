@@ -42,7 +42,7 @@ router.post('/', async (req, res) => {
 
       res.status(200).json({
         success: true,
-        token: jwt.sign({ userId: userId }, secretKey, { expiresIn: '1h' }),
+        token: jwt.sign({ userId: userId }, secretKey, { expiresIn: '24h' }),
         error: ''
       });
     } else {

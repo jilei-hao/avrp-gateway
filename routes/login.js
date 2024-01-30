@@ -14,12 +14,12 @@ router.use(express.json());
 
 router.post('/', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
 
     console.log("[loginRoutes::post] start querying database", req.body);
 
     const query = 'SELECT * FROM fn_get_user_info($1)';
-    const result = await db.query(query, [email]);
+    const result = await db.query(query, [username]);
 
     if (result.rowCount !== 0) {
       const row = result[0];
@@ -42,7 +42,7 @@ router.post('/', async (req, res) => {
 
       res.status(200).json({
         success: true,
-        token: jwt.sign({ userId: userId }, secretKey, { expiresIn: '1h' }),
+        token: jwt.sign({ userId: userId }, secretKey, { expiresIn: '24h' }),
         error: ''
       });
     } else {

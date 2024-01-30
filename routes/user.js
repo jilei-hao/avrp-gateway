@@ -13,15 +13,15 @@ router.use(express.json());
 // API endpoint to validate a username
 router.post('/', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
     const pwHash = await bcrypt.hash(password, 10);
 
-    console.log("[loginRoutes::post] start querying database", email, pwHash);
+    console.log("[loginRoutes::post] start querying database", username, pwHash);
 
     // Write to database
     const colName = 'user_id';
     const query = `SELECT fn_create_user($1, $2, $3) as ${colName};`;
-    const result = await dbHelper.query(query, [email, pwHash, 'EndUser']);
+    const result = await dbHelper.query(query, [username, pwHash, 'end-user']);
 
     console.log("-- completed querying database", result);
 
@@ -36,7 +36,7 @@ router.post('/', async (req, res) => {
       res.json({
         valid: false,
         userId: -1,
-        message: "A user with same email already exists!"});
+        message: "A user with same username already exists!"});
     }
   } catch (error) {
     console.error('Error querying database:', error);

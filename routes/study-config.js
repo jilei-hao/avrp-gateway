@@ -67,19 +67,19 @@ router.post('/', authenticateToken, uploadFileds, async (req, res) => {
 
     // send files to the data server
     const image4d_fileId = await ds_GetFileId(`${study_id}`, 'image_4d.nii.gz');
-    const dsId_image_4d = image4d_fileId !== 0 ? image4d_fileId :
+    const dsId_image_4d = image4d_fileId > 0 ? image4d_fileId :
       await ds_PostFile(req.files.image_4d[0].path, `${study_id}`, 'image_4d.nii.gz');
 
     console.log("[studyConfigRoute::post] dsId_image_4d: ", dsId_image_4d);
     
     const refsegsys_fileId = await ds_GetFileId(`${study_id}`, 'reference_seg_sys.nii.gz');
-    const dsId_reference_seg_sys = refsegsys_fileId !== 0 ? refsegsys_fileId :
+    const dsId_reference_seg_sys = refsegsys_fileId > 0 ? refsegsys_fileId :
       await ds_PostFile(req.files.reference_seg_sys[0].path, `${study_id}`, 'reference_seg_sys.nii.gz');
     
     console.log("[studyConfigRoute::post] dsId_reference_seg_sys: ", dsId_reference_seg_sys);
 
     const refsegdias_fileId = await ds_GetFileId(`${study_id}`, 'reference_seg_dias.nii.gz');
-    const dsId_reference_seg_dias = refsegdias_fileId !== 0 ? refsegdias_fileId : 
+    const dsId_reference_seg_dias = refsegdias_fileId > 0 ? refsegdias_fileId : 
       await ds_PostFile(req.files.reference_seg_dias[0].path, `${study_id}`, 'reference_seg_dias.nii.gz');
 
     console.log("[studyConfigRoute::post] dsId_reference_seg_dias: ", dsId_reference_seg_dias);

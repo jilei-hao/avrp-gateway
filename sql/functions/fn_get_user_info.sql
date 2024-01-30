@@ -1,5 +1,5 @@
 create or replace function fn_get_user_info (
-  _email varchar(50)
+  _username varchar(50)
 )
 returns table (user_id int, password_hash varchar, role_name varchar(50))
 as
@@ -8,9 +8,9 @@ begin
   -- validation
   if not exists (
     select 1 from users
-    where email = _email
+    where username = _username
   ) then
-    raise exception 'Invalid email: %', _email;
+    raise exception 'Invalid username: %', _username;
   end if;
   
   return query
@@ -18,7 +18,7 @@ begin
   from users as u
   join user_role as ur
   on u.user_role_id = ur.user_role_id
-  where u.email = _email;
+  where u.username = _username;
 end;
 $$
 language plpgsql;

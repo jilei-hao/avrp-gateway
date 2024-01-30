@@ -7,6 +7,7 @@ import caseRoute from './routes/case.js';
 import caseStudiesRoute from './routes/case-studies.js';
 import studyRoute from './routes/study.js';
 import studyConfigRoute from './routes/study-config.js';
+import handlerTasksRoute from './routes/handler-tasks.js';
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use('/case', caseRoute);
 app.use('/case_studies', caseStudiesRoute);
 app.use('/study', studyRoute);
 app.use('/study_config', studyConfigRoute);
+app.use('/handler-tasks', handlerTasksRoute);
 
 // Start the Express server
 const port = process.env.PORT || 3000;

@@ -17,60 +17,39 @@ router.get('/', authenticateToken, async (req, res) => {
     console.log("[handler-tasks::get] start querying database");
 
     // query the database
-    const query = `SELECT * FROM fn_get_case_study_headers($1);`;
-    const rows = await dbHelper.query(query, [user.userId]);
+    const query = `SELECT * FROM fn_get_handler_tasks();`;
+    const rows = await dbHelper.query(query, []);
+    console.log("[handler-tasks::get] rows: ", rows);
 
-    // sample ouptut
-    /*
-      {[
-        {
-          study_id: 1,
-          study_config: {
-            main_image_dsid: 123,
-            tp_start: 0,
-            tp_end: 10,
-            sys_segref_dsid: 256,
-            sys_tp_ref: 5,
-            sys_tp_start: 0,
-            sys_tp_end: 10,
-            dias_segref_dsid: 257,
-            dias_tp_ref: 5,
-            dias_tp_start: 0,
-            dias_tp_end: 10
-          },
-          study_status: ready-for-processing,
-          module_status: 64
-        }
-      ]}
+    const resData = { handler_tasks: []};
 
-    */
-
-    const case_study_headers = {};
-
+    // parse results into handler_tasks
     rows.forEach(row => {
-      console.log("[caseStudiesRoute::get] row: ", row);
-      const {case_id, case_name, mrn, study_id, study_name} = row;
+      console.log("[handler-tasks::get] row: ", row);
+      const { study_id, main_image_dsid, tp_start, tp_end,
+        sys_segref_dsid, sys_tp_ref, sys_tp_start, sys_tp_end,
+        dias_segref_dsid, dias_tp_ref, dias_tp_start, dias_tp_end, module_status} = row;
 
-      if (!case_study_headers[case_id]) {
-        case_study_headers[case_id] = {
-          id: case_id,
-          name: case_name,
-          mrn: mrn,
-          studies: []
-        }
-      }
-
-      if (study_id) {
-        case_study_headers[case_id].studies.push({
-          id: study_id,
-          name: study_name
+        resData.handler_tasks.push({
+          study_id: study_id,
+          study_config: {
+            main_image_dsid: main_image_dsid,
+            tp_start: tp_start,
+            tp_end: tp_end,
+            sys_segref_dsid: sys_segref_dsid,
+            sys_tp_ref: sys_tp_ref,
+            sys_tp_start: sys_tp_start,
+            sys_tp_end: sys_tp_end,
+            dias_segref_dsid: dias_segref_dsid,
+            dias_tp_ref: dias_tp_ref,
+            dias_tp_start: dias_tp_start,
+            dias_tp_end: dias_tp_end
+          },
+          module_status: module_status
         });
-      }
     });
 
-    console.log("[caseStudiesRoute::get] case_study_headers: ", case_study_headers);
-
-    res.status(200).json(case_study_headers);
+    res.status(200).json(resData);
   } catch(error) {
     console.error('Error querying database:', error);
     res.status(500).json({ error: 'Internal Server Error' });

@@ -14,9 +14,19 @@ router.use(express.json());
 
 router.post('/', async (req, res) => {
   try {
-    const { username, password } = req.body;
+    let { username, password } = req.body;
 
-    console.log("[loginRoutes::post] start querying database", req.body);
+    if (username == null || password == null) {
+      // try again using the authentication header (in the future it should be the only way to authenticate)
+      const authHeader = req.headers.authorization;
+      if (authHeader) {
+        const auth = Buffer.from(authHeader.split(' ')[1], 'base64').toString('utf8');
+        username = auth.split(':')[0];
+        password = auth.split(':')[1];
+      }
+    }
+
+    console.log("[loginRoutes::post] request body", req.body);
 
     const query = 'SELECT * FROM fn_get_user_info($1)';
     const result = await db.query(query, [username]);

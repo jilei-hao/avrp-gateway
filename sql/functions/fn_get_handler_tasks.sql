@@ -42,7 +42,7 @@ declare
   v_dias_propa_type_id int;
 begin
   -- find set of study id that has ready-for-processing status
-  create temporary table tmp_ready_studies as
+  create temp table tmp_ready_studies on commit drop as
   select s.study_id from study s 
   join study_status_lut ssl on s.study_status_id = ssl.study_status_id
   where ssl.study_status_name = 'ready-for-processing';

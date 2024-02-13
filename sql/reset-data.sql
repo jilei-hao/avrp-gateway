@@ -12,7 +12,7 @@ begin
   create temp table temp_case_study_ids (
     case_id int,
     study_id int
-  );
+  ) on commit drop;
 
   insert into temp_case_study_ids (case_id, study_id)
   select ucx.case_id, s.study_id

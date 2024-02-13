@@ -9,7 +9,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "reset-db-functions": "bash ./scripts/reset-db-functions.sh",
     "reset-db": "bash ./scripts/reset-db.sh",
-    "reset-data": "bash ./scripts/reset-data.sh"
+    "reset-data": "bash ./scripts/reset-data.sh",
+    "reset-study-status": "bash ./scripts/reset-study-status.sh"
   },
   "repository": {
     "type": "git",

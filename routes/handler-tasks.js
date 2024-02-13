@@ -56,4 +56,26 @@ router.get('/', authenticateToken, async (req, res) => {
   }
 })
 
+// put request to update module status
+router.put('/', authenticateToken, async (req, res) => {
+  try {
+    console.log("[handler-tasks::put] start updating module status");
+
+    // parse request body
+    const { study_id, study_status, module_status } = req.body;
+    console.log(`[handler-tasks::put] study_id: ${study_id} ;` + 
+      `study_status: ${study_status}; module_status: ${module_status}`);
+
+    // query the database
+    const query = `SELECT * FROM fn_update_study_status($1, $2, $3);`;
+    const rows = await dbHelper.query(query, [study_id, study_status, module_status]);
+    console.log("[handler-tasks::put] rows: ", rows);
+
+    res.status(200).json({ message: 'Module status updated successfully' });
+  } catch(error) {
+    console.error('Error updating module status:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+})
+
 export default router;

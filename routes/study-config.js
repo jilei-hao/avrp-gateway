@@ -97,8 +97,8 @@ router.post('/', authenticateToken, uploadFileds, async (req, res) => {
 
       const rows = await db.query(query, [
         study_id, dsId_image_4d, modality, tp_start, tp_end,
-        dsId_reference_seg_sys, tp_ref_sys, tp_start_sys, tp_end_sys,
-        dsId_reference_seg_dias, tp_ref_dias, tp_start_dias, tp_end_dias
+        dsId_reference_seg_sys, tp_start_sys, tp_end_sys, tp_ref_sys,
+        dsId_reference_seg_dias, tp_start_dias, tp_end_dias, tp_ref_dias, 
       ]);
 
       console.log("[studyConfigRoute::post] rows: ", rows);

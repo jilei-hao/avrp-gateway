@@ -1,5 +1,8 @@
-drop table app_data_header;
-drop table app_data_role_lut;
+drop table module_data_header;
+drop table module_output;
+drop table module;
+drop table module_output_purpose;
+drop table render_type;
 drop table propagation_config;
 drop table propagation_type_lut;
 drop table study;

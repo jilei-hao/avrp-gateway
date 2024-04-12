@@ -45,28 +45,25 @@ insert into image_role_lut (image_role_name)
 values ('main'), ('segmentation');
 
 insert into propagation_type_lut (propagation_type_name)
-values ('Systolic'), ('Diastolic');
+values ('systolic'), ('diastolic');
 
 insert into render_type(render_type_name)
-values ('volume'), ('polydata'), ('measurement');
+values ('volume'), ('polydata'), ('text'), ('unrenderable');
 
-insert into module_data_type(module_data_type_name, render_type_id)
-values 
-  ('volume-main', 1),
-  ('volume-segmentation', 1),
-  ('volume-overlay', 1),
-  ('polydata-main', 2),
-  ('polydata-overlay', 2),
-  ('measurement', 3);
+insert into module_output_purpose(module_output_purpose_name)
+values ('view-service'), ('manager'), ('internal');
 
-insert into module(module_name, module_display_name, module_description)
+insert into module(module_name, module_description)
 values
-  ('study-generator', 'Study Generator', 'Generates main volumes, segmenation volumes, and main models');
+  ('study-generator', 'Generates main volumes, segmenation volumes, and main models'),
+  ('measurement', 'Generates measurements and coaptation surfaces');
 
-insert into module_output_group(module_id, module_output_group_name, module_data_type_id)
+insert into module_output(module_id, module_output_name, render_type_id, module_output_purpose_id)
 values
-  (1, 'study-gen_image-main', 1),
-  (1, 'study-gen_image-segmentation', 2),
-  (1, 'study-gen_model-main', 4);
+  (1, 'volume-main', 1, 1),
+  (1, 'volume-segmentation', 1, 1),
+  (1, 'model-sl', 2, 1),
+  (1, 'model-ml', 2, 1),
+  (2, 'coaptation-surface', 2, 1);
 
 

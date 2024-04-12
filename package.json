@@ -10,7 +10,8 @@
     "reset-db-functions": "bash ./scripts/reset-db-functions.sh",
     "reset-db": "bash ./scripts/reset-db.sh",
     "reset-data": "bash ./scripts/reset-data.sh",
-    "reset-study-status": "bash ./scripts/reset-study-status.sh"
+    "reset-study-status": "bash ./scripts/reset-study-status.sh",
+    "run-db-shell": "bash ./scripts/run-db-shell.sh"
   },
   "repository": {
     "type": "git",

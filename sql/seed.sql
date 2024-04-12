@@ -23,9 +23,6 @@ begin
   from user_role
   where role_name = 'end-user'
   limit 1;
-
-  insert into users (username, user_role_id)
-  values ('dev-handler', _rid_app);
 end;
 $$;
 

@@ -120,9 +120,24 @@ create table module_output (
 create table module_data_header (
   module_data_header_id bigserial primary key,
   study_id int references study(study_id),
-  module_output_group_id int references module_output(module_output_id),
+  module_output_id int references module_output(module_output_id),
   time_point int,
   primary_index int, -- e.g. label
   secondary_index int, -- e.g. component of label?
   data_server_id bigint -- external
+);
+
+create table module_data_index_name_lut (
+  module_data_index_name_id serial primary key,
+  module_data_index_name varchar(50)
+);
+
+-- module data index lut
+create table module_data_index_lut (
+  module_data_index_id serial primary key,
+  module_output_id int references module_output(module_output_id),
+  index_type int, -- 1 for primary, 2 for secondary
+  index_name_id int references module_data_index_name_lut(module_data_index_name_id),
+  index_value int, -- 1, 2, 3
+  index_desc varchar(50) -- root, leaflet, etc.
 );

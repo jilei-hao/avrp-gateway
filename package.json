@@ -12,7 +12,8 @@
     "reset-data": "bash ./scripts/reset-data.sh",
     "reset-study-status": "bash ./scripts/reset-study-status.sh",
     "run-db-shell": "bash ./scripts/run-db-shell.sh",
-    "create-dev-user": "node ./scripts/create-dev-users.js"
+    "create-dev-users": "node ./scripts/create-dev-users.js",
+    "create-dev-data": "bash ./scripts/run-sql-file.sh ./tests/create_dev_data.sql"
   },
   "repository": {
     "type": "git",

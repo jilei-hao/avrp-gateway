@@ -63,4 +63,18 @@ values
   (1, 'model-ml', 2, 1),
   (2, 'coaptation-surface', 2, 1);
 
+insert into module_data_index_name_lut (module_data_index_name)
+values
+  ('label'),
+  ('coaptation-surface-type');
+
+
+insert into module_data_index_lut (module_output_id, index_type, index_name_id, index_value, index_desc)
+values
+  (4, 1, 1, 1, 'label-placeholder'),
+  (5, 1, 2, 1, 'all'),
+  (5, 1, 2, 2, 'LR'),
+  (5, 1, 2, 3, 'LN'),
+  (5, 1, 2, 4, 'RN');
+
 

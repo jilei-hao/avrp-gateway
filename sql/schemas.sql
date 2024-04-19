@@ -39,7 +39,7 @@ create table study_status_lut (
 
 create table image_header (
   image_header_id bigserial primary key,
-  data_server_id bigint,
+  data_server_id bigint, -- external
   image_role_id int references image_role_lut(image_role_id),
   image_modality_id int references image_modality_lut(image_modality_id),
   uploaded_at timestamp,

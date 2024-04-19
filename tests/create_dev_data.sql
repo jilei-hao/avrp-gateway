@@ -12,6 +12,7 @@ declare
   _coaptation_surface_output_id int;
   _rows_deleted int;
   _rows_inserted int;
+  _image_header_id int;
 begin
   select user_id into _dev_user_id
   from users
@@ -20,6 +21,10 @@ begin
 
   -- print user id
   raise notice 'dev user id: %', _dev_user_id;
+
+  --================================================
+  -- create case and study
+  --================================================
 
   if not (select count(*) from surgery_case where case_name = 'dev-case-1') > 0 then
     select fn_create_case('dev-case-1', _dev_user_id, 'dev-mrn-1') into _dev_case_id;
@@ -31,7 +36,17 @@ begin
     raise notice 'dev case already exists';
   end if;
 
-  -- print case id
+  if not ((
+    select count(*) from user_case_connection 
+    where user_id = _dev_user_id and case_id = _dev_case_id
+    ) > 0) 
+  then
+    insert into user_case_connection(user_id, case_id)
+    values (_dev_user_id, _dev_case_id);
+  else
+    raise notice 'dev case connection already exists';
+  end if;
+
   raise notice 'case id: %', _dev_case_id;
 
   if not (select count(*) from study where study_name = 'dev-study-1') > 0 then
@@ -46,6 +61,36 @@ begin
 
   -- print study id
   raise notice 'study id: %', _dev_study_id;
+
+  --================================================
+  -- create study config
+  --================================================
+
+  if not ((select count(*) from image_header where data_server_id = 1) > 0) then
+    insert into image_header(data_server_id, image_role_id, image_modality_id, uploaded_at, last_modified_at)
+    values
+      (1, 1, 1, now(), now())
+    returning image_header_id into _image_header_id;
+  else
+    select image_header_id into _image_header_id
+    from image_header
+    where data_server_id = 1;
+
+    raise notice 'main image already exists';
+  end if;
+
+  if not ((select count(*) from study_config where study_id = _dev_study_id) > 0) then
+    insert into study_config(study_id, time_point_start, time_point_end, main_image_id)
+    values
+      (_dev_study_id, 1, 20, _image_header_id);
+  else
+    raise notice 'dev study config already exists';
+  end if;
+
+
+  --================================================
+  -- create module data
+  --================================================
 
   -- get module id
   select module_id into _studygen_module_id

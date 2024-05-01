@@ -8,6 +8,7 @@ import caseStudiesRoute from './routes/case-studies.js';
 import caseStudiesVSRoute from './routes/case-studies-vs.js';
 import studyRoute from './routes/study.js';
 import studyConfigRoute from './routes/study-config.js';
+import studyDataHeadersVSRoute from './routes/study-data-headers-vs.js';
 import handlerTasksRoute from './routes/handler-tasks.js';
 
 const app = express();
@@ -37,6 +38,7 @@ app.use('/case_studies', caseStudiesRoute);
 app.use('/case-studies-vs', caseStudiesVSRoute);
 app.use('/study', studyRoute);
 app.use('/study_config', studyConfigRoute);
+app.use('/study-data-headers-vs', studyDataHeadersVSRoute);
 app.use('/handler-tasks', handlerTasksRoute);
 
 // Start the Express server

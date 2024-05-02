@@ -39,7 +39,7 @@ create table study_status_lut (
 
 create table image_header (
   image_header_id bigserial primary key,
-  data_server_id bigint,
+  data_server_id bigint, -- external
   image_role_id int references image_role_lut(image_role_id),
   image_modality_id int references image_modality_lut(image_modality_id),
   uploaded_at timestamp,
@@ -89,30 +89,55 @@ create table render_type (
   render_type_name varchar(50)
 );
 
-create table module_data_type (
-  module_data_type_id serial primary key,
-  module_data_type_name varchar(50),
-  render_type_id int references render_type(render_type_id)
+-- for what purpose does the output serve
+-- e.g. view-service, manager, internal
+-- bitmap
+create table module_output_purpose (
+  module_output_purpose_id serial primary key,
+  module_output_purpose_name varchar(50)
 );
 
+-- definition of modules
+-- e.g. study-gen, measurement
 create table module (
   module_id serial primary key,
-  module_name varchar(50), -- lower-kebab-case
-  module_display_name varchar(50), -- Camel Case with space
+  module_name varchar(50),
+  module_display_name varchar(50), 
   module_description varchar
 );
 
-create table module_output_group (
-  module_output_group_id serial primary key,
+-- definition of module output
+-- e.g. volume-main, volume-segmentation
+create table module_output (
+  module_output_id serial primary key,
   module_id int references module(module_id),
-  module_output_group_name varchar(50),
-  module_data_type_id int references module_data_type(module_data_type_id)
+  module_output_name varchar(50),
+  render_type_id int references render_type(render_type_id),
+  module_output_purpose_id int references module_output_purpose(module_output_purpose_id) -- bitmap
 );
 
 -- module data header stores output of modules
 create table module_data_header (
+  module_data_header_id bigserial primary key,
   study_id int references study(study_id),
-  module_output_group_id int references module_output_group(module_output_group_id),
-  number_of_files int,
-  data_server_ids bigint[]
+  module_output_id int references module_output(module_output_id),
+  time_point int,
+  primary_index int, -- e.g. label
+  secondary_index int, -- e.g. component of label?
+  data_server_id bigint -- external
+);
+
+create table module_data_index_name_lut (
+  module_data_index_name_id serial primary key,
+  module_data_index_name varchar(50)
+);
+
+-- module data index lut
+create table module_data_index_lut (
+  module_data_index_id serial primary key,
+  module_output_id int references module_output(module_output_id),
+  index_type int, -- 1 for primary, 2 for secondary
+  index_name_id int references module_data_index_name_lut(module_data_index_name_id),
+  index_value int, -- 1, 2, 3
+  index_desc varchar(50) -- root, leaflet, etc.
 );

@@ -31,28 +31,35 @@ router.get('/', authenticateToken, async (req, res) => {
           data_server_id
         } = row;
 
-      let data_group = study_data_headers.find(header => header.data_group_name === data_group_name);
+      let time_point_data = study_data_headers.find(header => header.time_point === time_point);
+
+      if (!time_point_data) {
+        time_point_data = {
+          time_point: time_point,
+          data_groups: []
+        }
+        study_data_headers.push(time_point_data);
+      }
+
+      let data_group = time_point_data.data_groups.find(group => group.data_group_name === data_group_name);
 
       if (!data_group) {
         data_group = {
           data_group_name: data_group_name,
-          time_point_data: []
+          data: []
         }
-        study_data_headers.push(data_group);
+        time_point_data.data_groups.push(data_group);
       }
 
-      if (time_point) {
-        data_group.time_point_data.push({
-          time_point: time_point,
-          primary_index: primary_index,
-          primary_index_name: primary_index_name,
-          primary_index_desc: primary_index_desc,
-          secondary_index: secondary_index,
-          secondary_index_name: secondary_index_name,
-          secondary_index_desc: secondary_index_desc,
-          data_server_id: data_server_id
-        });
-      }
+      data_group.data.push({
+        primary_index: primary_index,
+        primary_index_name: primary_index_name,
+        primary_index_desc: primary_index_desc,
+        secondary_index: secondary_index,
+        secondary_index_name: secondary_index_name,
+        secondary_index_desc: secondary_index_desc,
+        data_server_id: data_server_id
+      });
     });
 
     console.log("[study-data-headers-vs::get] study-data-headers: ", study_data_headers);

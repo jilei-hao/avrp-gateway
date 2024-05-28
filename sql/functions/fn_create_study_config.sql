@@ -98,7 +98,7 @@ begin
   -- insert new propagation configs
   ---- systolic
   select propagation_type_id into v_sys_propa_id from propagation_type_lut
-  where propagation_type_name = 'Systolic';
+  where propagation_type_name = 'systolic';
 
   insert into propagation_config(study_config_id, propagation_type_id, reference_segmentation_id,
    time_point_reference, time_point_start, time_point_end, created_at, last_modified_at)
@@ -107,7 +107,7 @@ begin
 
   ---- diastolic
   select propagation_type_id into v_dias_propa_id from propagation_type_lut
-  where propagation_type_name = 'Diastolic';
+  where propagation_type_name = 'diastolic';
 
   insert into propagation_config(study_config_id, propagation_type_id, reference_segmentation_id,
    time_point_reference, time_point_start, time_point_end, created_at, last_modified_at)

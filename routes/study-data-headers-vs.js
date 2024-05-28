@@ -46,16 +46,28 @@ router.get('/', authenticateToken, async (req, res) => {
       if (!data_group) {
         data_group = {
           data_group_name: data_group_name,
+          data_group_entries: [{
+            data_server_id: data_server_id,
+            primary_index: primary_index,
+            primary_index_name: primary_index_name,
+            primary_index_desc: primary_index_desc,
+            secondary_index: secondary_index,
+            secondary_index_name: secondary_index_name,
+            secondary_index_desc: secondary_index_desc,
+          }]
+        };
+        time_point_data.data_groups.push(data_group);
+      } else {
+        data_group.data_group_entries.push({
+          data_server_id: data_server_id,
           primary_index: primary_index,
           primary_index_name: primary_index_name,
           primary_index_desc: primary_index_desc,
           secondary_index: secondary_index,
           secondary_index_name: secondary_index_name,
           secondary_index_desc: secondary_index_desc,
-          data_server_id: data_server_id
-        }
-        time_point_data.data_groups.push(data_group);
-      }
+        });
+      };
     });
 
     console.log("[study-data-headers-vs::get] study-data-headers: ", study_data_headers);

@@ -49,10 +49,10 @@ begin
 
   -- get propagation_type_id
   select propagation_type_id into v_sys_propa_type_id 
-  from propagation_type_lut where propagation_type_name = 'Systolic';
+  from propagation_type_lut where propagation_type_name = 'systolic';
 
   select propagation_type_id into v_dias_propa_type_id 
-  from propagation_type_lut where propagation_type_name = 'Diastolic';
+  from propagation_type_lut where propagation_type_name = 'diastolic';
 
   return query 
   select

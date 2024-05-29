@@ -68,10 +68,25 @@ values
   ('label'),
   ('coaptation-surface-type');
 
-
-insert into module_data_index_lut (module_output_id, index_type, index_name_id, index_value, index_desc)
+insert into module_data_index_lut 
+	(module_output_id, index_type, index_name_id, index_value, index_desc)
 values
-  (4, 1, 1, 1, 'label-placeholder'),
+	(4, 1, 1, 1, 'l-cusp'),
+	(4, 1, 1, 2, 'l-cusp'),
+	(4, 1, 1, 3, 'r-cusp'),
+	(4, 1, 1, 4, 'whole-root-wall'),
+	(4, 1, 1, 5, 'lvo'),
+	(4, 1, 1, 6, 'stj'),
+	(4, 1, 1, 7, 'ias'),
+	(4, 1, 1, 8, 'lc-root'),
+	(4, 1, 1, 9, 'nc-root'),
+	(4, 1, 1, 10, 'rc-root'),
+	(4, 1, 1, 11, 'raphe'),
+	(4, 1, 1, 12, 'lumen'),
+	(4, 1, 1, 13, 'lc-sinus'),
+	(4, 1, 1, 14, 'nc-sinus'),
+	(4, 1, 1, 15, 'rc-sinus'),
+	(4, 1, 1, 16, 'calcification'),
   (5, 1, 2, 1, 'all'),
   (5, 1, 2, 2, 'LR'),
   (5, 1, 2, 3, 'LN'),

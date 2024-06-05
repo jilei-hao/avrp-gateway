@@ -72,7 +72,7 @@ insert into module_data_index_lut
 	(module_output_id, index_type, index_name_id, index_value, index_desc)
 values
 	(4, 1, 1, 1, 'l-cusp'),
-	(4, 1, 1, 2, 'l-cusp'),
+	(4, 1, 1, 2, 'n-cusp'),
 	(4, 1, 1, 3, 'r-cusp'),
 	(4, 1, 1, 4, 'whole-root-wall'),
 	(4, 1, 1, 5, 'lvo'),

@@ -92,4 +92,31 @@ values
   (5, 1, 2, 3, 'LN'),
   (5, 1, 2, 4, 'RN');
 
+insert into study_module_status_lut (study_module_status_name)
+values
+  ('waiting'), -- waiting prerequisites
+  ('ready'), -- ready to run (all prerequisites met)
+  ('running'), -- currently running
+  ('completed'), -- completed successfully
+  ('failed'); -- failed to complete (needs rerun or examination)
 
+
+do $$
+declare
+  _study_gen_id int;
+  _measurement_id int;
+begin
+  select module_id into _study_gen_id
+  from module
+  where module_name = 'study-generator'
+
+  select module_id into _measurement_id
+  from module
+  where module_name = 'measurement'
+
+  -- measurement module depends on study generator
+  insert into module_prerequisite (module_id, prerequisite_module_id)
+  values
+    (_measurement_id, _study_gen_id);
+end;
+$$;

@@ -141,3 +141,24 @@ create table module_data_index_lut (
   index_value int, -- 1, 2, 3
   index_desc varchar(50) -- root, leaflet, etc.
 );
+
+-- module prerequisites (one module can have multiple prerequisites)
+CREATE TABLE module_prerequisite (
+  module_id int REFERENCES module(module_id),
+  prerequisite_module_id int REFERENCES module(module_id),
+  PRIMARY KEY (module_id, prerequisite_module_id)
+);
+
+-- study-module status lookup
+CREATE TABLE study_module_status_lut (
+  study_module_status_id serial PRIMARY KEY,
+  study_module_status_name varchar(50)
+);
+
+-- study-module status
+create table study_module_status (
+  study_id int REFERENCES study(study_id),
+  module_id int REFERENCES module(module_id),
+  study_module_status_id int REFERENCES study_module_status_lut(study_module_status_id),
+  primary key (study_id, module_id)
+);

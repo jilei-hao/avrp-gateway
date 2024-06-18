@@ -29,10 +29,11 @@ $$;
 
 insert into study_status_lut (study_status_name)
 values 
-  ('waiting-for-input'),
-  ('ready-for-processing'), 
-  ('processing'), 
-  ('completed');
+  ('waiting'),
+  ('ready'), 
+  ('running'), 
+  ('completed'),
+  ('error');
 
 
 insert into image_modality_lut (image_modality_name)

@@ -52,7 +52,6 @@ create table study (
   case_id int references surgery_case(case_id),
   study_name varchar(50),
   study_status_id int references study_status_lut(study_status_id),
-  module_status bigint, -- bitmask of module status
   created_at timestamp,
   last_modified_at timestamp
 );
@@ -102,6 +101,7 @@ create table module_output_purpose (
 create table module (
   module_id serial primary key,
   module_name varchar(50),
+  module_precedence_rank int, -- determines the order of execution
   module_display_name varchar(50), 
   module_description varchar
 );

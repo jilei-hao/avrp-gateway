@@ -25,6 +25,10 @@ begin
   insert into study(case_id, study_name, study_status_id, module_status, created_at, last_modified_at)
   values(p_case_id, p_study_name, v_ready_status_id, 0, now(), now())
   returning study_id into new_study_id;
+
+  -- reset module status
+  perform fn_reset_study_module_status(new_study_id);
+
   return new_study_id;
 end;
 $$ language plpgsql;

@@ -83,26 +83,12 @@ create table propagation_config (
   last_modified_at timestamp
 );
 
-create table render_type (
-  render_type_id serial primary key,
-  render_type_name varchar(50)
-);
-
--- for what purpose does the output serve
--- e.g. view-service, manager, internal
--- bitmap
-create table module_output_purpose (
-  module_output_purpose_id serial primary key,
-  module_output_purpose_name varchar(50)
-);
-
 -- definition of modules
 -- e.g. study-gen, measurement
 create table module (
   module_id serial primary key,
   module_name varchar(50),
   module_precedence_rank int, -- determines the order of execution
-  module_display_name varchar(50), 
   module_description varchar
 );
 
@@ -111,9 +97,7 @@ create table module (
 create table module_output (
   module_output_id serial primary key,
   module_id int references module(module_id),
-  module_output_name varchar(50),
-  render_type_id int references render_type(render_type_id),
-  module_output_purpose_id int references module_output_purpose(module_output_purpose_id) -- bitmap
+  module_output_name varchar(50)
 );
 
 -- module data header stores output of modules

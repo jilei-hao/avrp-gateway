@@ -45,24 +45,18 @@ values ('main'), ('segmentation');
 insert into propagation_type_lut (propagation_type_name)
 values ('systolic'), ('diastolic');
 
-insert into render_type(render_type_name)
-values ('volume'), ('polydata'), ('text'), ('unrenderable');
-
-insert into module_output_purpose(module_output_purpose_name)
-values ('view-service'), ('manager'), ('internal');
-
 insert into module(module_name, module_description)
 values
   ('study-generator', 'Generates main volumes, segmenation volumes, and main models'),
   ('measurement', 'Generates measurements and coaptation surfaces');
 
-insert into module_output(module_id, module_output_name, render_type_id, module_output_purpose_id)
+insert into module_output(module_id, module_output_name, render_type_id)
 values
-  (1, 'volume-main', 1, 1),
-  (1, 'volume-segmentation', 1, 1),
-  (1, 'model-sl', 2, 1),
-  (1, 'model-ml', 2, 1),
-  (2, 'coaptation-surface', 2, 1);
+  (1, 'volume-main', 1),
+  (1, 'volume-segmentation', 1),
+  (1, 'model-sl', 2),
+  (1, 'model-ml', 2),
+  (2, 'coaptation-surface', 2);
 
 insert into module_data_index_name_lut (module_data_index_name)
 values

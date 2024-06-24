@@ -39,16 +39,11 @@ values
 insert into image_modality_lut (image_modality_name)
 values ('CT'), ('US'), ('unknown');
 
-insert into image_role_lut (image_role_name)
-values ('main'), ('segmentation');
-
-insert into propagation_type_lut (propagation_type_name)
-values ('systolic'), ('diastolic');
-
-insert into module(module_name, module_description)
+insert into module(module_name, module_precedence_rank, module_description)
 values
-  ('study-generator', 'Generates main volumes, segmenation volumes, and main models'),
-  ('measurement', 'Generates measurements and coaptation surfaces');
+  ('user-input', 0, 'Stores all user inputs'),
+  ('study-generator', 1, 'Generates main volumes, segmenation volumes, and main models'),
+  ('measurement', 2, 'Generates measurements and coaptation surfaces');
 
 insert into module_output(module_id, module_output_name, render_type_id)
 values

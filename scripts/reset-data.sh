@@ -1,3 +1,5 @@
 #! /bin/bash
 
-psql -p 6061 -U jileihao -d avrpdb -f sql/reset-data.sql
+port=$1
+
+psql -p $port -U jileihao -d avrpdb -f sql/reset-data.sql

@@ -1,7 +1,9 @@
 #! /bin/bash
 
+port=$1
+
 # Apply functions in the function folder
 for f in sql/functions/*.sql; do
-  psql -p 6061 -U jileihao -d avrpdb -f $f
+  psql -p $port -U jileihao -d avrpdb -f $f
 done
 

@@ -1,3 +1,4 @@
 #! /bin/bash
+port=$1
 
-psql -p 6061 -U jileihao -d avrpdb -f $1
+psql -p $port -U jileihao -d avrpdb -f $2

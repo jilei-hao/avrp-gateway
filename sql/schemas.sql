@@ -114,7 +114,7 @@ create table module_data_header (
   time_point int,
   primary_index int, -- e.g. label
   secondary_index int, -- e.g. component of label?
-  data_server_id bigint -- external
+  application_data_header_id int references application_data_header(application_data_header_id)
 );
 
 create table module_data_index_name_lut (

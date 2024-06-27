@@ -42,13 +42,6 @@ values
 insert into image_modality_lut (image_modality_name)
 values ('CT'), ('US'), ('unknown');
 
-insert into module_output(module_id, module_output_name, render_type_id)
-values
-  (1, 'volume-main', 1),
-  (1, 'volume-segmentation', 1),
-  (1, 'model-sl', 2),
-  (1, 'model-ml', 2),
-  (2, 'coaptation-surface', 2);
 
 insert into study_module_status_lut (study_module_status_name)
 values
@@ -113,7 +106,7 @@ begin
   where module_data_index_name = 'coaptation-surface-type';
 
   insert into module_data_index_lut 
-	  (module_output_id, index_type, index_name_id, index_value, index_desc)
+	  (module_output_id, module_data_index_type_id, index_name_id, index_value, index_desc)
   values
     (_model_ml_output_id, _primary_index_type, _label_index_name_id, 1, 'l-cusp'),
     (_model_ml_output_id, _primary_index_type, _label_index_name_id, 2, 'n-cusp'),
@@ -151,6 +144,14 @@ values
   ('measurement', 2, 'Generates measurements and coaptation surfaces'),
   ('root-diameter', 2, 'Generates root diameters');
 
+insert into module_output(module_id, module_output_name)
+values
+  (1, 'volume-main'),
+  (1, 'volume-segmentation'),
+  (1, 'model-sl'),
+  (1, 'model-ml'),
+  (2, 'coaptation-surface');
+
 -- configure modules
 do $$
 declare
@@ -158,6 +159,11 @@ declare
   _study_gen_id int;
   _measurement_id int;
   _root_diam_id int;
+  _config_key_text_id int;
+  _config_key_tp_id int;
+  _config_key_decimal_id int;
+  _config_key_integer_id int;
+  _config_key_data_id int;
 begin
   select module_id into _user_input_id
   from module
@@ -183,35 +189,25 @@ begin
     (_root_diam_id, _study_gen_id);
 
   -- insert configuration keys
-  do $$
-  declare
-    _config_key_text_id int;
-    _config_key_tp_id int;
-    _config_key_decimal_id int;
-    _config_key_integer_id int;
-    _config_key_data_id int;
-  begin
-    select configuration_key_type_id into _config_key_text_id
-    from configuration_key_type_lut
-    where configuration_key_type_name = 'text';
+  select configuration_key_type_id into _config_key_text_id
+  from configuration_key_type_lut
+  where configuration_key_type_name = 'text';
 
-    select configuration_key_type_id into _config_key_tp_id
-    from configuration_key_type_lut
-    where configuration_key_type_name = 'time-point';
+  select configuration_key_type_id into _config_key_tp_id
+  from configuration_key_type_lut
+  where configuration_key_type_name = 'time-point';
 
-    select configuration_key_type_id into _config_key_decimal_id
-    from configuration_key_type_lut
-    where configuration_key_type_name = 'decimal';
+  select configuration_key_type_id into _config_key_decimal_id
+  from configuration_key_type_lut
+  where configuration_key_type_name = 'decimal';
 
-    select configuration_key_type_id into _config_key_integer_id
-    from configuration_key_type_lut
-    where configuration_key_type_name = 'integer';
+  select configuration_key_type_id into _config_key_integer_id
+  from configuration_key_type_lut
+  where configuration_key_type_name = 'integer';
 
-    select configuration_key_type_id into _config_key_ds_id
-    from configuration_key_type_lut
-    where configuration_key_type_name = 'data-id';
-
-  end;
+  select configuration_key_type_id into _config_key_data_id
+  from configuration_key_type_lut
+  where configuration_key_type_name = 'data-id';
   
 end;
 $$;

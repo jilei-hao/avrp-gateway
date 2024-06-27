@@ -122,7 +122,7 @@ create table module_dependency (
   time_point int,
   primary_index int,
   secondary_index int
-)
+);
 
 -- module data header stores output of modules
 create table module_data_header (
@@ -140,7 +140,7 @@ create table module_data_index_name_lut (
   module_data_index_name varchar(50)
 );
 
-create table moduel_data_index_type_lut (
+create table module_data_index_type_lut (
   module_data_index_type_id serial primary key,
   module_data_index_type_name varchar(50)
 );
@@ -149,7 +149,7 @@ create table moduel_data_index_type_lut (
 create table module_data_index_lut (
   module_data_index_id serial primary key,
   module_output_id int references module_output(module_output_id),
-  module_data_index_type_id int references moduel_data_index_type_lut(module_data_index_type_id),
+  module_data_index_type_id int references module_data_index_type_lut(module_data_index_type_id),
   index_name_id int references module_data_index_name_lut(module_data_index_name_id),
   index_value int, -- 1, 2, 3
   index_desc varchar(50) -- root, leaflet, etc.

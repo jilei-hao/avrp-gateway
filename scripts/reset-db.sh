@@ -8,4 +8,4 @@ port=$1
 ./scripts/reset-db-functions.sh $port
 
 # Apply create user
-psql -p 6061 -U jileihao -d avrpdb -f sql/create_user.sql
+psql -p $port -U jileihao -d avrpdb -f sql/create_user.sql

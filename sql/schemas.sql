@@ -72,8 +72,8 @@ create table module_configuration_keys (
 );
 
 -- study module configurations
-create table study_module_configuration (
-  study_id int references study(study_id),
+create table module_configuration (
+  module_configuration_id serial primary key,
   module_id int references module(module_id),
   module_configuration_key_id int references module_configuration_keys(module_configuration_key_id),
   configuration_value varchar(50)
@@ -106,6 +106,24 @@ create table module_output (
   module_output_name varchar(50)
 );
 
+-- indicates how a record is associated with time point
+-- e.g. all, specific, etc. 
+create table time_point_type_lut (
+  time_point_type_id serial primary key,
+  time_point_type_name varchar(50)
+);
+
+-- module dependency
+create table module_dependency (
+  module_dependency_id serial primary key,
+  dependent_module_id int references module(module_id),
+  required_module_output_id int references module_output(module_output_id),
+  time_point_type_id int references time_point_type_lut(time_point_type_id),
+  time_point int,
+  primary_index int,
+  secondary_index int
+)
+
 -- module data header stores output of modules
 create table module_data_header (
   module_data_header_id bigserial primary key,
@@ -122,21 +140,19 @@ create table module_data_index_name_lut (
   module_data_index_name varchar(50)
 );
 
+create table moduel_data_index_type_lut (
+  module_data_index_type_id serial primary key,
+  module_data_index_type_name varchar(50)
+);
+
 -- module data index lut
 create table module_data_index_lut (
   module_data_index_id serial primary key,
   module_output_id int references module_output(module_output_id),
-  index_type int, -- 1 for primary, 2 for secondary
+  module_data_index_type_id int references moduel_data_index_type_lut(module_data_index_type_id),
   index_name_id int references module_data_index_name_lut(module_data_index_name_id),
   index_value int, -- 1, 2, 3
   index_desc varchar(50) -- root, leaflet, etc.
-);
-
--- module prerequisites (one module can have multiple prerequisites)
-CREATE TABLE module_prerequisite (
-  module_id int REFERENCES module(module_id),
-  prerequisite_module_id int REFERENCES module(module_id),
-  PRIMARY KEY (module_id, prerequisite_module_id)
 );
 
 -- study-module status lookup

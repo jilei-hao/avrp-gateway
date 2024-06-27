@@ -69,29 +69,76 @@ values
   ('label'),
   ('coaptation-surface-type');
 
-insert into module_data_index_lut 
-	(module_output_id, index_type, index_name_id, index_value, index_desc)
+insert into module_data_index_type_lut (module_data_index_type_name)
 values
-	(4, 1, 1, 1, 'l-cusp'),
-	(4, 1, 1, 2, 'n-cusp'),
-	(4, 1, 1, 3, 'r-cusp'),
-	(4, 1, 1, 4, 'whole-root-wall'),
-	(4, 1, 1, 5, 'lvo'),
-	(4, 1, 1, 6, 'stj'),
-	(4, 1, 1, 7, 'ias'),
-	(4, 1, 1, 8, 'lc-root'),
-	(4, 1, 1, 9, 'nc-root'),
-	(4, 1, 1, 10, 'rc-root'),
-	(4, 1, 1, 11, 'raphe'),
-	(4, 1, 1, 12, 'lumen'),
-	(4, 1, 1, 13, 'lc-sinus'),
-	(4, 1, 1, 14, 'nc-sinus'),
-	(4, 1, 1, 15, 'rc-sinus'),
-	(4, 1, 1, 16, 'calcification'),
-  (5, 1, 2, 1, 'all'),
-  (5, 1, 2, 2, 'LR'),
-  (5, 1, 2, 3, 'LN'),
-  (5, 1, 2, 4, 'RN');
+  ('primary'),
+  ('secondary');
+
+insert into time_point_type_lut (time_point_type_name)
+values
+  ('all'),
+  ('specific');
+
+do $$
+declare
+  _primary_index_type int;
+  _secondary_index_type int;
+  _model_ml_output_id int;
+  _co_surface_output_id int;
+  _label_index_name_id int;
+  _co_surface_index_name_id int;
+begin
+  select module_output_id into _model_ml_output_id
+  from module_output
+  where module_output_name = 'model-ml';
+
+  select module_output_id into _co_surface_output_id
+  from module_output
+  where module_output_name = 'coaptation-surface';
+
+  select module_data_index_type_id into _primary_index_type
+  from module_data_index_type_lut
+  where module_data_index_type_name = 'primary';
+
+  select module_data_index_type_id into _secondary_index_type
+  from module_data_index_type_lut
+  where module_data_index_type_name = 'secondary';
+
+  select module_data_index_name_id into _label_index_name_id
+  from module_data_index_name_lut
+  where module_data_index_name = 'label';
+
+  select module_data_index_name_id into _co_surface_index_name_id
+  from module_data_index_name_lut
+  where module_data_index_name = 'coaptation-surface-type';
+
+  insert into module_data_index_lut 
+	  (module_output_id, index_type, index_name_id, index_value, index_desc)
+  values
+    (_model_ml_output_id, _primary_index_type, _label_index_name_id, 1, 'l-cusp'),
+    (_model_ml_output_id, _primary_index_type, _label_index_name_id, 2, 'n-cusp'),
+    (_model_ml_output_id, _primary_index_type, _label_index_name_id, 3, 'r-cusp'),
+    (_model_ml_output_id, _primary_index_type, _label_index_name_id, 4, 'whole-root-wall'),
+    (_model_ml_output_id, _primary_index_type, _label_index_name_id, 5, 'lvo'),
+    (_model_ml_output_id, _primary_index_type, _label_index_name_id, 6, 'stj'),
+    (_model_ml_output_id, _primary_index_type, _label_index_name_id, 7, 'ias'),
+    (_model_ml_output_id, _primary_index_type, _label_index_name_id, 8, 'lc-root'),
+    (_model_ml_output_id, _primary_index_type, _label_index_name_id, 9, 'nc-root'),
+    (_model_ml_output_id, _primary_index_type, _label_index_name_id, 10, 'rc-root'),
+    (_model_ml_output_id, _primary_index_type, _label_index_name_id, 11, 'raphe'),
+    (_model_ml_output_id, _primary_index_type, _label_index_name_id, 12, 'lumen'),
+    (_model_ml_output_id, _primary_index_type, _label_index_name_id, 13, 'lc-sinus'),
+    (_model_ml_output_id, _primary_index_type, _label_index_name_id, 14, 'nc-sinus'),
+    (_model_ml_output_id, _primary_index_type, _label_index_name_id, 15, 'rc-sinus'),
+    (_model_ml_output_id, _primary_index_type, _label_index_name_id, 16, 'calcification'),
+    (_co_surface_output_id, _primary_index_type, _co_surface_index_name_id, 1, 'all'),
+    (_co_surface_output_id, _primary_index_type, _co_surface_index_name_id, 2, 'LR'),
+    (_co_surface_output_id, _primary_index_type, _co_surface_index_name_id, 3, 'LN'),
+    (_co_surface_output_id, _primary_index_type, _co_surface_index_name_id, 4, 'RN');
+end;
+$$;
+
+
 
 --=========================================================
 -- Predefined non-lut data
@@ -163,20 +210,6 @@ begin
     select configuration_key_type_id into _config_key_ds_id
     from configuration_key_type_lut
     where configuration_key_type_name = 'data-id';
-
-    insert into module_configuration_keys (module_id, configuration_key_name, configuration_key_type_id)
-    values
-      (_user_input_id, 'image-main', _config_key_data_id),
-      (_user_input_id, 'tp_start', _config_key_tp_id),
-      (_user_input_id, 'tp_end', _config_key_tp_id),
-      (_user_input_id, 'seg_sys_ref', _config_key_data_id),
-      (_user_input_id, 'seg_sys_tp_ref', _config_key_tp_id),
-      (_user_input_id, 'seg_sys_tp_start', _config_key_tp_id),
-      (_user_input_id, 'seg_sys_tp_end', _config_key_tp_id),
-      (_user_input_id, 'seg_dias_ref', _config_key_data_id),
-      (_user_input_id, 'seg_dias_tp_ref', _config_key_tp_id),
-      (_user_input_id, 'seg_dias_tp_start', _config_key_tp_id),
-      (_user_input_id, 'seg_dias_tp_end', _config_key_tp_id);
 
   end;
   
